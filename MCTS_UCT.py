@@ -5,7 +5,7 @@ from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close
 
 class MCTS_UCT():
 
-    def __init__(self, nodo, inicio, num_nodos, num_ramas):
+    def __init__(self, nodo, inicio, num_nodos, num_ramas, rango_op):
         self.Nodo = nodo
         self.nodo_inicial = self.Nodo(inicio)
         self.Mejor_vector = self.nodo_inicial.getInformacion()
@@ -13,6 +13,8 @@ class MCTS_UCT():
         self.hist_valor = []
         self.__seguimiento=[]
         self.__num_ramas=num_ramas
+        self.__rango_min = rango_op[0]
+        self.__rango_max = rango_op[1]
         for i in range(num_nodos):
             self.__seguimiento = [self.nodo_inicial]
             nodo_actual = self.seleccion(self.nodo_inicial)
@@ -21,7 +23,7 @@ class MCTS_UCT():
             self.retropropagacion()
             self.hist_valor.append(nodo_actual.getValor())
             self.grafica(i)
-
+        clf()
 
     def grafica(self,i):
         cont=0
@@ -36,13 +38,14 @@ class MCTS_UCT():
                 lx.append(x)
                 ly.append(y)
         plot(lx, ly)
-        n_fig=("traza", tipo, str(i), ".png")
+        n_fig=("resultados/traza", tipo, str(i), ".png")
         savefig("_".join(n_fig), format="png")
 
     def nuevo_valor(self,origen):
-        nuevo_vector = [0] * len(origen)
+        nuevo_vector = [self.__rango_max+1] * len(origen)
         for x in range(len(origen)):
-            nuevo_vector[x] = uniform(origen[x] - 10, origen[x] + 10)
+            while nuevo_vector[x] < self.__rango_min or nuevo_vector[x] > self.__rango_max:
+                nuevo_vector[x] = uniform(origen[x] - 10, origen[x] + 10)
         return nuevo_vector
 
 

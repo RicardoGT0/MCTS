@@ -61,17 +61,17 @@ funciones=[Bent,
 rango = [-100, 100]
 tam_arreglo = 2
 num_nodos = 100
-num_ramas=2
+num_ramas=5
 data = []
 for funcion in funciones:
     Nodo = Dyn_Nodo.dyn_nodo(funcion)
     print(funcion)
 
-    for ronda in range(20):
+    for ronda in range(1):
         t_inicial = time()
 
         inicio = crear_inicio(tam_arreglo, rango)
-        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas)
+        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango)
 
         tiempo = time() - t_inicial
         valor_inicial=MCTS.nodo_inicial.getValor()
