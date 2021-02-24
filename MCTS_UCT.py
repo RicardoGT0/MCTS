@@ -63,28 +63,6 @@ class MCTS_UCT():
         return porcentaje_exito
 
 
-    def uct(self, nodo, nodo_Padre):
-        Qs = nodo.ganacia
-        Ns = nodo.visitas
-        if Ns == 0:
-            return 0
-        Cp = 1
-        s0 = nodo_Padre
-        Ns0 = s0.visitas
-        return (Qs / Ns) + (2 * Cp * sqrt(log(Ns0) / Ns))
-
-
-    def mejorSucesorUCT(self, nodo_actual):
-        uct_mejor = self.uct(nodo_actual.siguiente[0], nodo_actual)
-        uct_nodo = nodo_actual.siguiente[0]
-        for nodo in nodo_actual.siguiente:
-            uct_actual = self.uct(nodo, nodo_actual)
-            if uct_actual >= uct_mejor:  #cambio >=
-                uct_nodo = nodo
-        self.__seguimiento.append(uct_nodo)
-        return uct_nodo
-
-
     def expande(self, nodo_actual):
         nuevo_nodo = 0
         if nodo_actual.siguiente: #No esta vacio
@@ -101,10 +79,21 @@ class MCTS_UCT():
         return nuevo_nodo
 
 
+    def mejor_opcion(self, nodo_actual):
+        mejor_opcion=0
+        resultado=0
+        for nodo in nodo_actual.siguiente:
+            if resultado <= nodo.ganacia:
+                mejor_opcion=nodo
+                resultado=nodo.ganacia
+        self.__seguimiento.append(mejor_opcion)
+        return mejor_opcion
+
+
     def seleccion(self, nodo_actual):
         while len(nodo_actual.siguiente) >= self.__num_ramas:
             nodo_actual.visitas += 1
-            nodo_actual = self.mejorSucesorUCT(nodo_actual)
+            nodo_actual = self.mejor_opcion(nodo_actual)
         return self.expande(nodo_actual)
 
 
