@@ -4,7 +4,6 @@ from funciones.Discus import Discus
 def dyn_nodo(tipo):
     class Nodo (tipo):
         def __init__(self, informacion):
-            #print(tipo)
             self.__informacion = informacion
             self.siguiente = []
             self.visitas = 0
@@ -16,5 +15,8 @@ def dyn_nodo(tipo):
 
         def getValor(self):
             return self.__valor
+
+        def get_tipo(self):
+            return tipo
 
     return Nodo
