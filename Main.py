@@ -59,7 +59,7 @@ funciones=[Bent,
         Xcuadrada]
 
 rango = [-100, 100]
-tam_arreglo = 2
+num_dimension = 2
 num_nodos = 100
 num_ramas=5
 data = []
@@ -70,7 +70,7 @@ for funcion in funciones:
     for ronda in range(1):
         t_inicial = time()
 
-        inicio = crear_inicio(tam_arreglo, rango)
+        inicio = crear_inicio(num_dimension, rango)
         MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango)
 
         tiempo = time() - t_inicial
