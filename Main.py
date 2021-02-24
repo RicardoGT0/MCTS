@@ -59,9 +59,9 @@ funciones=[Bent,
         Xcuadrada]
 
 rango = [-100, 100]
-tam_arreglo = 10
+tam_arreglo = 2
 num_nodos = 100
-
+num_ramas=2
 data = []
 for funcion in funciones:
     Nodo = Dyn_Nodo.dyn_nodo(funcion)
@@ -71,7 +71,7 @@ for funcion in funciones:
         t_inicial = time()
 
         inicio = crear_inicio(tam_arreglo, rango)
-        MCTS=MCTS_UCT(Nodo, inicio,num_nodos)
+        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas)
 
         tiempo = time() - t_inicial
         valor_inicial=MCTS.nodo_inicial.getValor()

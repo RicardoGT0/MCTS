@@ -4,13 +4,14 @@ from math import sqrt, log
 
 class MCTS_UCT():
 
-    def __init__(self, nodo, inicio, num_nodos):
+    def __init__(self, nodo, inicio, num_nodos, num_ramas):
         self.Nodo = nodo
         self.nodo_inicial = self.Nodo(inicio)
         self.Mejor_vector = self.nodo_inicial.getInformacion()
         self.Mejor_valor = self.nodo_inicial.getValor()
         self.hist_valor = []
         self.__seguimiento=[]
+        self.__num_ramas=num_ramas
         for i in range(num_nodos):
             self.__seguimiento = [self.nodo_inicial]
             nodo_actual = self.seleccion(self.nodo_inicial)
@@ -80,13 +81,10 @@ class MCTS_UCT():
 
 
     def seleccion(self, nodo_actual):
-        if len(nodo_actual.siguiente) < 2:  # no está completamente expandido
-            return self.expande(nodo_actual)
-        else:
-            while len(nodo_actual.siguiente) > 0:  # no sea terminal
-                nodo_actual.visitas += 1
-                nodo_actual = self.mejorSucesorUCT(nodo_actual)
-            return self.expande(nodo_actual)
+        while len(nodo_actual.siguiente) >= self.__num_ramas:
+            nodo_actual.visitas += 1
+            nodo_actual = self.mejorSucesorUCT(nodo_actual)
+        return self.expande(nodo_actual)
 
 
     def simulacion(self, nodo_actual):
