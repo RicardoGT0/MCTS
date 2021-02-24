@@ -1,5 +1,6 @@
 from random import uniform
 from math import sqrt, log
+from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close
 
 
 class MCTS_UCT():
@@ -19,7 +20,24 @@ class MCTS_UCT():
             self.simulacion(nodo_actual)
             self.retropropagacion()
             self.hist_valor.append(nodo_actual.getValor())
+            self.grafica(i)
 
+
+    def grafica(self,i):
+        cont=0
+        tipo=""
+        lx=[]
+        ly=[]
+        for nodo in self.__seguimiento:
+            tipo=str(nodo.get_tipo())[1:-1]
+            if len(nodo.getInformacion())==2:
+                x,y=nodo.getInformacion()
+                cont+=1
+                lx.append(x)
+                ly.append(y)
+        plot(lx, ly)
+        n_fig=("traza", tipo, str(i), ".png")
+        savefig("_".join(n_fig), format="png")
 
     def nuevo_valor(self,origen):
         nuevo_vector = [0] * len(origen)
