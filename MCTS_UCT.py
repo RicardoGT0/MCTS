@@ -1,6 +1,6 @@
 from random import uniform
 from math import sqrt, log
-from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close
+from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close, gca
 
 
 class MCTS_UCT():
@@ -30,13 +30,19 @@ class MCTS_UCT():
         tipo=""
         lx=[]
         ly=[]
+        lz=[]
         for nodo in self.__seguimiento:
             tipo=str(nodo.get_tipo())[1:-1]
             if len(nodo.getInformacion())==2:
                 x,y=nodo.getInformacion()
+                z=nodo.getValor()
                 cont+=1
                 lx.append(x)
                 ly.append(y)
+                lz.append(z)
+        #codigo para grafica 3D
+        #gca(projection='3d')
+        #plot(lx, ly, lz, label=tipo+str(i))
         plot(lx, ly)
         n_fig=("resultados/traza", tipo, str(i), ".png")
         savefig("_".join(n_fig), format="png")
@@ -45,19 +51,22 @@ class MCTS_UCT():
         nuevo_vector = [self.__rango_max+1] * len(origen)
         for x in range(len(origen)):
             while nuevo_vector[x] < self.__rango_min or nuevo_vector[x] > self.__rango_max:
-                nuevo_vector[x] = uniform(origen[x] - 10, origen[x] + 10)
+                nuevo_vector[x] = uniform(origen[x] - 5, origen[x] + 5)
         return nuevo_vector
 
 
     def montecarlo_radial(self, origen):
         contador = 0
-        presicion = 300
+        presicion = 100
         # print (1/sqrt(presicion))
 
         for i in range(presicion):
             nodo_virtual = self.Nodo(self.nuevo_valor(origen))
             if (nodo_virtual.getValor() <= self.Mejor_valor):
                 contador += 1
+            x=nodo_virtual.getInformacion()[0]
+            y=nodo_virtual.getInformacion()[1]
+            #scatter(x,y, color='black',alpha=0.3)
 
         porcentaje_exito = contador / presicion #cambio 100 * contador / presicion
         return porcentaje_exito
