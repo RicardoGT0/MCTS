@@ -59,7 +59,7 @@ funciones=[Bent,
         Xcuadrada]
 
 rango = [-100, 100]
-num_dimension = 2
+num_dimension = 10
 num_nodos = 100
 num_ramas=5
 data = []
@@ -67,7 +67,7 @@ for funcion in funciones:
     Nodo = Dyn_Nodo.dyn_nodo(funcion)
     print(funcion)
 
-    for ronda in range(1):
+    for ronda in range(20):
         t_inicial = time()
 
         inicio = crear_inicio(num_dimension, rango)
