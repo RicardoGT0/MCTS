@@ -24,7 +24,7 @@ class MCTS_UCT():
             self.simulacion(nodo_actual)
             self.retropropagacion()
             self.hist_valor.append(nodo_actual.getValor())
-            if len(inicio)>3:
+            if len(inicio)<=3:
                 self.grafica(i)
         clf()
 
