@@ -3,7 +3,9 @@ from time import time
 import Nodo as Dyn_Nodo
 from matplotlib.pyplot import scatter, savefig, figure, plot, clf
 import pandas as pd
+from os import mkdir
 
+from calc_score import calc_score
 from MCTS_UCT import MCTS_UCT
 from funciones.Discus import Discus
 from funciones.Bent import Bent
@@ -63,6 +65,14 @@ num_dimension = 10
 num_nodos = 100
 num_ramas=5
 data = []
+directorio= "resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)
+try:
+    mkdir(directorio)
+    f = open('last_path.txt', 'w')
+    f.write(directorio)
+    f.close()
+except:
+    print("El directorio ", directorio, " ya existe")
 for funcion in funciones:
     Nodo = Dyn_Nodo.dyn_nodo(funcion)
     print(funcion)
@@ -71,7 +81,7 @@ for funcion in funciones:
         t_inicial = time()
 
         inicio = crear_inicio(num_dimension, rango)
-        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango)
+        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango, directorio)
 
         tiempo = time() - t_inicial
         valor_inicial=MCTS.nodo_inicial.getValor()
@@ -84,10 +94,12 @@ for funcion in funciones:
         x = range(1, num_nodos+1)
         plot(x,MCTS.hist_valor)
         n_funcion=str(funcion)[1:-1]
-        n_fig = listToString(["resultados/Figura_",n_funcion, "_", str(ronda),".png"])
+        n_fig = listToString([directorio+"/Figura_",n_funcion, "_", str(ronda),".png"])
         savefig(n_fig, format="png")
         clf()
 
 
 dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
-dataframe.to_csv("resultados/Resultados_" + str(num_nodos) + " nodos.csv")
+dataframe.to_csv(directorio+"/Resultados.csv")
+
+calc_score()

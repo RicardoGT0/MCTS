@@ -5,16 +5,18 @@ from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close, gca
 
 class MCTS_UCT():
 
-    def __init__(self, nodo, inicio, num_nodos, num_ramas, rango_op):
+    def __init__(self, nodo, inicio, num_nodos, num_ramas, rango_op, directorio=""):
         self.Nodo = nodo
         self.nodo_inicial = self.Nodo(inicio)
         self.Mejor_vector = self.nodo_inicial.getInformacion()
         self.Mejor_valor = self.nodo_inicial.getValor()
         self.hist_valor = []
+        self.__directorio = directorio + "/"
         self.__seguimiento=[]
         self.__num_ramas=num_ramas
         self.__rango_min = rango_op[0]
         self.__rango_max = rango_op[1]
+
         for i in range(num_nodos):
             self.__seguimiento = [self.nodo_inicial]
             nodo_actual = self.seleccion(self.nodo_inicial)
@@ -45,7 +47,7 @@ class MCTS_UCT():
         #gca(projection='3d')
         #plot(lx, ly, lz, label=tipo+str(i))
         plot(lx, ly)
-        n_fig=("resultados/traza", tipo, str(i), ".png")
+        n_fig=(self.__directorio+"traza", tipo, str(i), ".png")
         savefig("_".join(n_fig), format="png")
 
     def nuevo_valor(self,origen):

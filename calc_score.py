@@ -1,27 +1,40 @@
 import pandas as pd
 from seaborn import lineplot
-from os import system
+from os import mkdir
 
-dataframe = pd.read_csv('resultados/Resultados_100 nodos.csv', index_col=0)
+def calc_score():
+    f = open('last_path.txt', 'r')
+    ruta = f.read()
+    f.close()
+    try:
+        mkdir(ruta+'/analisis')
+    except:
+        print("El directorio ", ruta, " ya existe")
 
-list_func = []
-for index, row in dataframe.iterrows():
-    if not (row.Funcion in list_func):
-        list_func.append(row.Funcion)
-        
-print (list_func)
+    dataframe = pd.read_csv(ruta+'/Resultados.csv', index_col=0)
 
-for func in list_func:
-    df_slice = dataframe [dataframe ['Funcion'] == func]
-    df_slice = df_slice[['Mejor_Valor','Tiempo']]
-    print("\n",func)
-    print (df_slice.describe())
-    func = func[1:-1]
-    df_desc = df_slice.describe()
-    df_desc.to_csv('analisis/resultados_'+func+'.csv')
-    grafico = lineplot(y='Mejor_Valor', data=df_slice).figure.savefig ("analisis/"+func+".png")
-    
+    list_func = []
+    for index, row in dataframe.iterrows():
+        if not (row.Funcion in list_func):
+            list_func.append(row.Funcion)
 
-#print (dataframe['Funcion'])
+    print (list_func)
 
-#print (dataframe)
+    for func in list_func:
+        df_slice = dataframe [dataframe ['Funcion'] == func]
+        df_slice = df_slice[['Mejor_Valor','Tiempo']]
+        print("\n",func)
+        print (df_slice.describe())
+        func = func[1:-1]
+        df_desc = df_slice.describe()
+        df_desc.to_csv(ruta+'/analisis/resultados_'+func+'.csv')
+        grafico=lineplot(data=df_slice['Mejor_Valor'])
+        grafico.figure.savefig (ruta+'/analisis/'+func+'.png')
+        grafico.figure.clf()
+
+
+    #print (dataframe['Funcion'])
+
+    #print (dataframe)
+
+calc_score()
