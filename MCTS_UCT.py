@@ -34,6 +34,7 @@ class MCTS_UCT():
         lx=[]
         ly=[]
         lz=[]
+        dimension=len(self.nodo_inicial.getInformacion())
         for nodo in self.__seguimiento:
             tipo=str(nodo.get_tipo())[1:-1]
             if len(nodo.getInformacion())==2:
@@ -43,10 +44,12 @@ class MCTS_UCT():
                 lx.append(x)
                 ly.append(y)
                 lz.append(z)
-        #codigo para grafica 3D
-        #gca(projection='3d')
-        #plot(lx, ly, lz, label=tipo+str(i))
-        plot(lx, ly)
+        if dimension==3:
+            #codigo para grafica 3D
+            gca(projection='3d')
+            plot(lx, ly, lz, label=tipo+str(i))
+        else:
+            plot(lx, ly)
         n_fig=(self.__directorio+"traza", tipo, str(i), ".png")
         savefig("_".join(n_fig), format="png")
 
