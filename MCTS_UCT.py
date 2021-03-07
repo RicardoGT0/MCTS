@@ -5,7 +5,7 @@ from matplotlib.pyplot import scatter, savefig, figure, plot, clf, close, gca
 
 class MCTS_UCT():
 
-    def __init__(self, nodo, inicio, num_nodos, num_ramas, rango_op, directorio=""):
+    def __init__(self, nodo, inicio, num_nodos, num_ramas, rango_op, presicion_simulacion, directorio=""):
         self.Nodo = nodo
         self.nodo_inicial = self.Nodo(inicio)
         self.Mejor_vector = self.nodo_inicial.getInformacion()
@@ -13,6 +13,7 @@ class MCTS_UCT():
         self.hist_valor = []
         self.__directorio = directorio + "/"
         self.__seguimiento=[]
+        self.__presicion_simulacion=presicion_simulacion
         self.__num_ramas=num_ramas
         self.__rango_min = rango_op[0]
         self.__rango_max = rango_op[1]
@@ -63,7 +64,7 @@ class MCTS_UCT():
 
     def montecarlo_radial(self, origen):
         contador = 0
-        presicion = 100
+        presicion = self.__presicion_simulacion
         # print (1/sqrt(presicion))
 
         for i in range(presicion):

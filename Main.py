@@ -64,6 +64,7 @@ rango = [-100, 100]
 num_dimension = 10
 num_nodos = 100
 num_ramas=5
+presicion_simulacion=100
 data = []
 directorio= "resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)
 try:
@@ -81,7 +82,7 @@ for funcion in funciones:
         t_inicial = time()
 
         inicio = crear_inicio(num_dimension, rango)
-        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango, directorio)
+        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango, presicion_simulacion, directorio)
 
         tiempo = time() - t_inicial
         valor_inicial=MCTS.nodo_inicial.getValor()
