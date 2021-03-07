@@ -43,64 +43,67 @@ def listToString(s):
         # return string
     return str1
 
+def run(rango = [-100, 100], num_dimension = 10, num_nodos = 100, num_ramas=5, presicion_sim=100):
 
-funciones=[Bent,
-		Discus,
-		Weierstrass,
-		Schwefels,
-		Katsuura,
-		HappyCat,
-		HGBat,
-		Expanded_GR,
-		Scaffer,
-		Rosenbrock,
-		Griewank,
-		Rastrigin,
-		Elliptic,
-		Ackley,
-        Xcuadrada]
+    funciones=[Bent,
+            Discus,
+            Weierstrass,
+            Schwefels,
+            Katsuura,
+            HappyCat,
+            HGBat,
+            Expanded_GR,
+            Scaffer,
+            Rosenbrock,
+            Griewank,
+            Rastrigin,
+            Elliptic,
+            Ackley,
+            Xcuadrada]
 
-rango = [-100, 100]
-num_dimension = 10
-num_nodos = 100
-num_ramas=5
-presicion_simulacion=100
-data = []
-directorio= "resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)
-try:
-    mkdir(directorio)
-    f = open('last_path.txt', 'w')
-    f.write(directorio)
-    f.close()
-except:
-    print("El directorio ", directorio, " ya existe")
-for funcion in funciones:
-    Nodo = Dyn_Nodo.dyn_nodo(funcion)
-    print(funcion)
+    data = []
+    directorio= "resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)+"_P"+str(presicion_sim)
+    try:
+        mkdir(directorio)
+        f = open('last_path.txt', 'w')
+        f.write(directorio)
+        f.close()
+    except:
+        print("El directorio ", directorio, " ya existe")
+    for funcion in funciones:
+        Nodo = Dyn_Nodo.dyn_nodo(funcion)
+        print(funcion)
 
-    for ronda in range(20):
-        t_inicial = time()
+        for ronda in range(20):
+            t_inicial = time()
 
-        inicio = crear_inicio(num_dimension, rango)
-        MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango, presicion_simulacion, directorio)
+            inicio = crear_inicio(num_dimension, rango)
+            MCTS=MCTS_UCT(Nodo, inicio,num_nodos,num_ramas, rango, presicion_sim, directorio)
 
-        tiempo = time() - t_inicial
-        valor_inicial=MCTS.nodo_inicial.getValor()
-        vector_inicial=MCTS.nodo_inicial.getInformacion()
-        mejor_valor=MCTS.Mejor_valor
-        mejor_vector=MCTS.Mejor_vector
-        data.append([funcion, ronda, vector_inicial, valor_inicial, mejor_valor, mejor_vector, tiempo])
+            tiempo = time() - t_inicial
+            valor_inicial=MCTS.nodo_inicial.getValor()
+            vector_inicial=MCTS.nodo_inicial.getInformacion()
+            mejor_valor=MCTS.Mejor_valor
+            mejor_vector=MCTS.Mejor_vector
+            data.append([funcion, ronda, vector_inicial, valor_inicial, mejor_valor, mejor_vector, tiempo])
 
 
-        x = range(1, num_nodos+1)
-        plot(x,MCTS.hist_valor)
-        n_funcion=str(funcion)[1:-1]
-        n_fig = listToString([directorio+"/Figura_",n_funcion, "_", str(ronda),".png"])
-        savefig(n_fig, format="png")
-        clf()
+            x = range(1, num_nodos+1)
+            plot(x,MCTS.hist_valor)
+            n_funcion=str(funcion)[1:-1]
+            n_fig = listToString([directorio+"/Figura_",n_funcion, "_", str(ronda),".png"])
+            savefig(n_fig, format="png")
+            clf()
 
 
-dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
-dataframe.to_csv(directorio+"/Resultados.csv")
+    dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
+    dataframe.to_csv(directorio+"/Resultados.csv")
 
-calc_score()
+    calc_score()
+
+
+if __name__ == "__main__":
+    for nd in range(50,501,50):
+        for nr in range(2,11):
+            for p in range(50, 301, 50):
+                run(num_nodos=nd,num_ramas=nr,presicion_sim=p)
