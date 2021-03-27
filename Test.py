@@ -1,6 +1,6 @@
 from random import uniform
 from math import sqrt
-
+import pandas as pd
 
 def validacion_positiva(punto):
     return punto < 1
@@ -19,4 +19,24 @@ def montecarlo_radial(origen):
     print(porcentaje_exito)
     print (1/sqrt(presicion))
 
-montecarlo_radial()
+#montecarlo_radial()
+
+
+data = {
+    '1':{
+        'apple':11,
+        'banana':18},
+    '2':{
+        'apple':16,
+        'banana':12}
+}
+print(data)
+
+a={k: pd.Series(v) for k, v in data.items()}
+
+a={}
+for k, v in data.items():
+    for x, z in v.items():
+        a[k]=pd.Series(z)
+
+print(a )
