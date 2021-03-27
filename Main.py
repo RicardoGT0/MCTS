@@ -5,6 +5,7 @@ from matplotlib.pyplot import scatter, savefig, figure, plot, clf
 import pandas as pd
 from os import mkdir
 
+from comparativa import comparativa
 from calc_score import calc_score
 from MCTS_UCT import MCTS_UCT
 from funciones.Discus import Discus
@@ -62,7 +63,7 @@ def run(rango = [-100, 100], num_dimension = 10, num_nodos = 100, num_ramas=5, p
             Xcuadrada]
 
     data = []
-    directorio= "resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)+"_P"+str(presicion_sim)
+    directorio= "resultados/resultados_D"+str(num_dimension)+"_N"+str(num_nodos)+"_R"+str(num_ramas)+"_P"+str(presicion_sim)
     try:
         mkdir(directorio)
         f = open('last_path.txt', 'w')
@@ -74,7 +75,7 @@ def run(rango = [-100, 100], num_dimension = 10, num_nodos = 100, num_ramas=5, p
         Nodo = Dyn_Nodo.dyn_nodo(funcion)
         print(funcion)
 
-        for ronda in range(20):
+        for ronda in range(1):
             t_inicial = time()
 
             inicio = crear_inicio(num_dimension, rango)
@@ -100,10 +101,14 @@ def run(rango = [-100, 100], num_dimension = 10, num_nodos = 100, num_ramas=5, p
     dataframe.to_csv(directorio+"/Resultados.csv")
 
     calc_score()
+    comparativa()
 
 
 if __name__ == "__main__":
+    run(num_dimension=2, num_nodos=60, num_ramas=3, presicion_sim=10)
+"""
     for nd in range(50,501,50):
         for nr in range(2,11):
             for p in range(50, 301, 50):
                 run(num_nodos=nd,num_ramas=nr,presicion_sim=p)
+"""
