@@ -71,9 +71,10 @@ class MCTS_UCT():
             nodo_virtual = self.Nodo(self.nuevo_valor(origen))
             if (nodo_virtual.getValor() <= self.Mejor_valor):
                 contador += 1
-            x=nodo_virtual.getInformacion()[0]
-            y=nodo_virtual.getInformacion()[1]
-            #scatter(x,y, color='black',alpha=0.3)
+            if len(nodo_virtual.getInformacion()) == 2:
+                x=nodo_virtual.getInformacion()[0]
+                y=nodo_virtual.getInformacion()[1]
+                scatter(x,y, color='black',alpha=0.3)
 
         porcentaje_exito = contador / presicion #cambio 100 * contador / presicion
         return porcentaje_exito
