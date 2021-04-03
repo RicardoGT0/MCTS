@@ -70,12 +70,8 @@ def run(rango=[-100, 100], num_dimension=10, num_nodos=100, num_ramas=5, presici
         n_fig = listToString([directorio + "/Figura_", n_funcion, "_", str(ronda), ".png"])
         savefig(n_fig, format="png")
         clf()
-
-    dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
-    dataframe.to_csv(directorio + "/Resultados.csv")
-
-
-
+    return data
+    
 
 if __name__ == "__main__":
     bench=Benchmark()
@@ -84,10 +80,10 @@ if __name__ == "__main__":
     except:
         print("Error al crear el directorio /resultados")
 
-    for nd in [300]:
-        for nr in [7]:
-            for p in [200, 300]:
-                directorio = "resultados/resultados_N" + str(nd) + "_R" + str(nr) + "_P" + str(p)
+    for nd in [50]:
+        for nr in [4,5]:
+            for p in [50]:
+                directorio = "resultados/resultados_N" + str(nd) + "_R" + str(nr) + "_P" + str(p)    
                 try:
                     mkdir(directorio)
                     f = open('last_path.txt', 'w')
@@ -96,17 +92,21 @@ if __name__ == "__main__":
                 except:
                     print("Error al crear el directorio ", directorio)
 
-                for f in range(1, 16):
+                for f in range(1, 2):
                     info = bench.get_info(f)
                     dim = info['dimension']
                     low = info['lower']
                     upp = info['upper']
                     func_fit = bench.get_function(f)
                     func=type("func_" + str(f),(object,),{"func":func_fit})
-                    run(rango=[low,upp], num_dimension=dim, funcion=func,rondas=20, num_nodos= nd, num_ramas=nr, presicion_sim=p, directorio=directorio)
+                    data = run(rango=[low,upp], num_dimension=dim, funcion=func,rondas=20, num_nodos= nd, num_ramas=nr, presicion_sim=p, directorio=directorio)
 
+                    dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
+                    dataframe.to_csv(directorio + "/Resultados.csv")
+    
                 calc_score()
-                comparativa(directorio)
+    comparativa("resultados")
+    
 """
     funciones = [Bent,
                  Discus,
