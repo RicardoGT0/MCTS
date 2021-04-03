@@ -5,7 +5,7 @@ from matplotlib.pyplot import scatter, savefig, figure, plot, clf
 import pandas as pd
 from os import mkdir
 
-from comparativa import comparativa
+import comparativa
 from calc_score import calc_score
 from MCTS_UCT import MCTS_UCT
 from funciones.Discus import Discus
@@ -80,9 +80,9 @@ if __name__ == "__main__":
     except:
         print("Error al crear el directorio /resultados")
 
-    for nd in [50]:
-        for nr in [4,5]:
-            for p in [50]:
+    for nd in [50]:     #vector de prueba [50,300]
+        for nr in [4,5]:    #vector de prueba [4,5,7,9]
+            for p in [50]:      #vector de prueba [50,150,200,300]
                 directorio = "resultados/resultados_N" + str(nd) + "_R" + str(nr) + "_P" + str(p)    
                 try:
                     mkdir(directorio)
@@ -92,6 +92,7 @@ if __name__ == "__main__":
                 except:
                     print("Error al crear el directorio ", directorio)
 
+                data_funciones = []
                 for f in range(1, 2):
                     info = bench.get_info(f)
                     dim = info['dimension']
@@ -101,12 +102,13 @@ if __name__ == "__main__":
                     func=type("func_" + str(f),(object,),{"func":func_fit})
                     data = run(rango=[low,upp], num_dimension=dim, funcion=func,rondas=20, num_nodos= nd, num_ramas=nr, presicion_sim=p, directorio=directorio)
 
-                    dataframe = pd.DataFrame(data, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
-                    dataframe.to_csv(directorio + "/Resultados.csv")
+                dataframe = pd.DataFrame(data_funciones, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
+                dataframe.to_csv(directorio + "/Resultados.csv")
     
                 calc_score()
-    comparativa("resultados")
-    
+    comparativa.comparativa("resultados")
+    data_comparativa = pd.DataFrame.from_dict(comparativa.dic_funciones, orient='index')
+    data_comparativa.to_csv('resultados/comparativa.csv')
 """
     funciones = [Bent,
                  Discus,
