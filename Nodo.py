@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones.Discus import Discus
-
+import numpy as np
 def dyn_nodo(tipo):
     class Nodo (tipo):
         def __init__(self, informacion):
@@ -8,7 +7,7 @@ def dyn_nodo(tipo):
             self.siguiente = []
             self.visitas = 0
             self.ganacia = 0
-            self.__valor = self.func(informacion)
+            self.__valor = self.func(np.array(informacion))
 
         def getInformacion(self):
             return self.__informacion
