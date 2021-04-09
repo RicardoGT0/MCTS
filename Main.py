@@ -45,6 +45,13 @@ def listToString(s):
         # return string
     return str1
 
+def graficar(num_nodos,y, funcion, ronda):
+    x = range(1, num_nodos + 1)
+    plot(x, y)
+    n_funcion = str(funcion)[1:-1]
+    n_fig = listToString([directorio + "/Figura_", n_funcion, "_", str(ronda), ".png"])
+    savefig(n_fig, format="png")
+    clf()
 
 def run(rango=[-100, 100], num_dimension=10, num_nodos=100, num_ramas=5, presicion_sim=100, rondas=20, funcion=Xcuadrada, directorio=""):
     data = []
@@ -64,12 +71,7 @@ def run(rango=[-100, 100], num_dimension=10, num_nodos=100, num_ramas=5, presici
         mejor_vector = MCTS.Mejor_vector
         data.append([funcion, ronda, vector_inicial, valor_inicial, mejor_valor, mejor_vector, tiempo])
 
-        x = range(1, num_nodos + 1)
-        plot(x, MCTS.hist_valor)
-        n_funcion = str(funcion)[1:-1]
-        n_fig = listToString([directorio + "/Figura_", n_funcion, "_", str(ronda), ".png"])
-        savefig(n_fig, format="png")
-        clf()
+        #graficar(num_nodos, MCTS.hist_valor, funcion, ronda)
     return data
     
 
@@ -80,9 +82,9 @@ if __name__ == "__main__":
     except:
         print("Error al crear el directorio /resultados")
 
-    for nd in [50]:     #vector de prueba [50,300]
-        for nr in [4,5]:    #vector de prueba [4,5,7,9]
-            for p in [50]:      #vector de prueba [50,150,200,300]
+    for nd in [100]:     #vector de prueba [50,300]
+        for nr in [10]:    #vector de prueba [4,5,7,9]
+            for p in [100]:      #vector de prueba [50,150,200,300]
                 directorio = "resultados/resultados_N" + str(nd) + "_R" + str(nr) + "_P" + str(p)    
                 try:
                     mkdir(directorio)
@@ -93,14 +95,14 @@ if __name__ == "__main__":
                     print("Error al crear el directorio ", directorio)
 
                 data_funciones = []
-                for f in range(1, 2):
+                for f in range(1, 16):
                     info = bench.get_info(f)
                     dim = info['dimension']
                     low = info['lower']
                     upp = info['upper']
                     func_fit = bench.get_function(f)
                     func=type("func_" + str(f),(object,),{"func":func_fit})
-                    data = run(rango=[low,upp], num_dimension=dim, funcion=func,rondas=20, num_nodos= nd, num_ramas=nr, presicion_sim=p, directorio=directorio)
+                    data_funciones.extend(run(rango=[low,upp], num_dimension=dim, funcion=func,rondas=20, num_nodos= nd, num_ramas=nr, presicion_sim=p, directorio=directorio))
 
                 dataframe = pd.DataFrame(data_funciones, columns=["Funcion", "Ronda", "Vector_Inicial", "Valor_Inicial", "Mejor_Valor", "Mejor_Vector", "Tiempo"])
                 dataframe.to_csv(directorio + "/Resultados.csv")
